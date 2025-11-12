@@ -17,7 +17,7 @@ class CinemaController extends Controller
      * Display a listing of the resource.
      */
 
-   public function datatables()
+    public function datatables()
     {
         //jika data yang diambil tdk ada relasi gnakan query jila ada pake with []
         $cinemas = Cinema::query();
@@ -164,5 +164,22 @@ class CinemaController extends Controller
     {
         $fileName = 'data-lokasi-bioskop.xlsx';
         return Excel::download(new CinemaExport, $fileName);
+    }
+
+
+    public function cinemaList()
+    {
+        $cinemas = Cinema::all();
+        return view('schedule.cinemas', compact('cinemas'));
+    }
+
+    public function cinemaSchedules($cinema_id)
+    {
+        $schedules = Schedule::where('cinema_id', $cinema_id)->with('movie')->whereHas('movie', function($q)
+        {
+            $q->where('activated', 1);
+        }
+        )->get();
+        return view('schedule.cinema-schedule', compact('schedules'));
     }
 }

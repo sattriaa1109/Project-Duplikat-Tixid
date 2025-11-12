@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\PromoController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\UserController;
@@ -12,6 +13,18 @@ Route::get('/', [MovieController::class, 'home'])->name('home');
 Route::get('/schedules/{movie_id}', [MovieController::class, 'movieSchedule'])->name('schedules.detail');
 Route::get('/movies/active', [MovieController::class, 'homeMovie'])->name('home.movies.active');
 
+
+Route::middleware('isUser')->group(function(){
+    Route::get('/schedules/{scheduleId}/hours/{hourId}/ticket',[TicketController::class, 'showSeats'])->name('schedules.show_seats');
+    Route::prefix('tickets')->name('tickets.')->group(function(){
+        Route::post('/', [TicketController::class, 'store'])->name('store');
+        Route::get('/{ticketId}/order', [TicketController::class, 'ticketOrderPage'])->name('order');
+        Route::post('/barcode', [TicketController::class, 'createBarcode'])->name('barcode');
+        Route::get('/{ticketId}/payment', [TicketController::class, 'ticketPaymentPage'])->name('ticket.payment');  
+    });
+});
+Route::get('cinemas/list', [CinemaController::class, 'cinemaList'])->name('cinema.list');
+Route::get('cinemas/{cinema_id}/schedules', [CinemaController::class, 'cinemaSchedules'])->name('cinema.schedules');
 
 Route::get('/login', function () {
     return view('auth.login');

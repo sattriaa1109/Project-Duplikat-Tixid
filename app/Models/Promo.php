@@ -12,4 +12,10 @@ class Promo extends Model
 
   protected $fillable = ['promo_code', 'discount', 'type', 'activated'];
 
+
+      public function tickets(){
+        return $this->hasMany(Ticket::class);
+    }
+
+    
 }
