@@ -66,6 +66,9 @@ class TicketController extends Controller
             'activated'=> 0,
         ]);
 
+
+        
+
         return response()->json([
             'message'=> 'Ticket created successfully',
             'data'=> $createData
